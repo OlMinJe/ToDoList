@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import './App.css';
 import TodoInsert from './components/TodoInsert';
 import TodoList from './components/TodoList';
 import TodoTemplate from './components/TodoTemplate';
 
 function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: '할 일 추가2',
-      checked: true,
-    },
-    {
-      id: 2,
-      text: '할 일 추가1',
-      checked: true,
-    },
-  ]);
+  const [todos, setTodos] = useState([]);
+  const nextId = useRef(1);
+  const onInsert = useCallback((text) => {
+    const todo = {
+      id: nextId.current,
+      text,
+      checked: false,
+    };
+    setTodos(todos.concat(todo));
+    nextId.current += 1;
+  });
+
   return (
     <TodoTemplate>
-      <TodoInsert />
+      <TodoInsert onInsert={onInsert} />
       <TodoList todos={todos} />
     </TodoTemplate>
   );
